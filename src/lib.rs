@@ -1,7 +1,12 @@
+use std::fs::File;
+use std::os::unix::io::FromRawFd;
+use std::os::raw::c_int;
+use std::io::Write;
+
 pub fn writeln(msg: &'static str) {
     let mut stdout = unsafe {
-        <std::fs::File as std::os::unix::io::FromRawFd>::from_raw_fd(0 as std::os::raw::c_int)
+        File::from_raw_fd(0 as c_int)
     };
-    let _ = write!(&mut stdout as &mut dyn std::io::Write, "{}\n", msg).unwrap();
+    writeln!(stdout, "{}", msg).unwrap();
 }
 
