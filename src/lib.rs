@@ -27,3 +27,15 @@ pub fn writeln_c(msg: &str) {
         unsafe { libc::perror(b"write\0".as_ptr() as *const libc::c_char) };
     }
 }
+
+extern {
+    fn writeln_ffi_c(msg: *const std::os::raw::c_char);
+}
+
+
+pub fn writeln_ffi(msg: &str) {
+    let mut buf: Vec<u8> = msg.bytes().collect();
+    buf.push(b'\0');
+    let buf = buf.as_ptr() as *const std::os::raw::c_char;
+    unsafe { writeln_ffi_c(buf); }
+}
